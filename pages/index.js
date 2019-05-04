@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Feed from '../components/Feed';
+import Link from "next/link";
+import Feed from "../components/Feed";
 
 const Index = props => {
   return (
@@ -25,8 +25,8 @@ const Index = props => {
       </div>
       <div
         style={{
-          width: '100%',
-          margin: 'auto'
+          width: "100%",
+          margin: "auto"
         }}
       >
         <Feed articles={props.articles} />
@@ -34,10 +34,10 @@ const Index = props => {
 
       <style jsx>{`
         #title {
-          font-family: 'Lucida Console', Monaco, monospace;
+          font-family: "Lucida Console", Monaco, monospace;
           margin: auto;
           width: 40%;
-          display: 'inline-block';
+          display: "inline-block";
         }
         #nav {
           position: fixed;
@@ -67,16 +67,22 @@ const Index = props => {
 
 Index.getInitialProps = async function(context) {
   const { id } = context.query;
-  const url = `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=003c00c6550b481d8825ef6012ffb38f`;
+
+  const url = id
+    ? `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=API_KEY`
+    : `https://newsapi.org/v2/top-headlines?sources=hacker-news&apiKey=API_KEY`;
+
   const res = await fetch(url);
   const data = await res.json();
 
-  // console.log(`Show data fetched. Count: ${JSON.stringify(data)}`);
-
-  return {
-    articles: data.articles,
-    source: data.articles[0].source.name
-  };
+  if (data && data.articles) {
+    return {
+      articles: data.articles,
+      source: data.articles[0].source.name
+    };
+  } else {
+    console.warn("HAVE YOU ADDED YOUR OWN API KEY");
+  }
 };
 
 export default Index;
